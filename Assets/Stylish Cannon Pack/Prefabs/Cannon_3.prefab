@@ -116,11 +116,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cannonballPrefab: {fileID: 2700401900346680581, guid: f2817620bd5eaa9448a68383ff027b8f, type: 3}
-  cannonballSpawnPoint: {fileID: 6949557378510248357}
+  cannonballSpawnPoint: {fileID: 207565379}
   cannonSpeed: 5
-  cannonballSpeed: 70
+  cannonballSpeed: 200
   rotationSpeed: 0.5
-  maxRotation: 50
+  maxRotation: 70
 --- !u!1 &6949557378510210437
 GameObject:
   m_ObjectHideFlags: 0

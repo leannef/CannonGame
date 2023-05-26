@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
+    public GameObject boomPrefab;
     private Rigidbody rb;
     void Start()
     {
@@ -24,7 +25,7 @@ public class BulletController : MonoBehaviour
     {
         if (other.CompareTag("Target"))
         {
-            GameManager.Instance.boom.transform.position = other.transform.position;
+            Instantiate(boomPrefab, other.transform.position, Quaternion.identity);
             Destroy(other.gameObject);
             GameManager.Instance.TargetHit();             
             Destroy(gameObject);

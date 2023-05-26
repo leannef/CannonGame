@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -12,11 +13,11 @@ public class GameManager : MonoBehaviour
     }
 
     public GameObject targetPrefab;
-    public ParticleSystem boom;
+    public TextMeshProUGUI scoreText;
     public delegate void TargetHitDelegate();
     public static event TargetHitDelegate OnTargetHitEvent;
-
     
+    private int score; 
 
     private void Awake()
     {
@@ -33,13 +34,19 @@ public class GameManager : MonoBehaviour
 
     private void OnEnable()
     {
-        StopParticleEffect();
         OnTargetHitEvent += HandleTargetHit;
     }
 
     private void Start()
     {
+        score = 0; 
+        UpdateScoreDisplay();
         InvokeRepeating("SpawnTargets", 1.0f, 6.5f);
+    }
+
+    private void UpdateScoreDisplay()
+    {
+        scoreText.text = score.ToString();
     }
 
     public void SpawnTargets()
@@ -47,7 +54,6 @@ public class GameManager : MonoBehaviour
         Vector3 spawnPoint = GetRandomSpawnPoint();
         GameObject target = Instantiate(targetPrefab, spawnPoint, Quaternion.Euler(35, 0, 0));
         Destroy(target, 12f); //Destroy the target after 10 seconds;
-
     }
 
     private Vector3 GetRandomSpawnPoint()
@@ -66,18 +72,14 @@ public class GameManager : MonoBehaviour
 
     private void HandleTargetHit()
     {
-        PlayParticleEffect();
+        IncreaseScore();
+        UpdateScoreDisplay();
         SpawnTargets();
     }
 
-    public void PlayParticleEffect()
+    private void IncreaseScore()
     {
-        boom.Play();
-    }
-
-    public void StopParticleEffect()
-    {        
-        boom.Stop();
+        score++;
     }
 
     private void OnDisable()

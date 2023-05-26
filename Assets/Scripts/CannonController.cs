@@ -6,19 +6,21 @@ public class CannonController : MonoBehaviour
 {
     public GameObject cannonballPrefab;
     public Transform cannonballSpawnPoint;
-    public float cannonSpeed = 5f;
+    public float cannonSpeed = 15f;
     public float cannonballSpeed = 200f;
     public float rotationSpeed = 0.5f;
-    public float maxRotation = 50f; 
+    public float maxRotation = 70f; 
 
     private float currentRotationHorizontal = 0f;
     private float currentRotationVertical = -10f;
-    private float maxMoveDistance = 50f;
+    private float maxMoveDistance = 60f;
 
+    private GameObject cannon;
     private Vector3 initialPosition; //Cannon Initial Position
 
     private void Start()
     {
+        cannon = transform.parent.gameObject;
         initialPosition = transform.parent.position;
     }
 
@@ -33,7 +35,7 @@ public class CannonController : MonoBehaviour
         // Rotate the cannon vertically based on arrow key inputs
         float rotationVertical = Input.GetAxis("Vertical") * rotationSpeed;
         currentRotationVertical -= rotationVertical;
-        currentRotationVertical = Mathf.Clamp(currentRotationVertical, -30f, 20f);
+        currentRotationVertical = Mathf.Clamp(currentRotationVertical, -30f, 30f);
         transform.localRotation *= Quaternion.Euler(0f, 0f, currentRotationVertical);
 
         // Fire the cannonball on spacebar press
@@ -43,13 +45,13 @@ public class CannonController : MonoBehaviour
         }
 
         // Move the cannon left when 'Q' key is pressed
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKey(KeyCode.Q))
         {
             MoveCannonLeft();
         }
 
         // Move the cannon right when 'E' key is released
-        if (Input.GetKeyUp(KeyCode.Q))
+        if (Input.GetKey(KeyCode.E))
         {
             MoveCannonRight();
         }
@@ -67,16 +69,16 @@ public class CannonController : MonoBehaviour
 
     void MoveCannonLeft()
     {
-        Vector3 newPos = transform.position + Vector3.left * cannonSpeed * Time.deltaTime;
-        newPos.x = Mathf.Clamp(newPos.x, initialPosition.x - maxMoveDistance, initialPosition.x);
-        transform.position = newPos;
+        Vector3 newPos = cannon.transform.position + Vector3.left * cannonSpeed * Time.deltaTime;
+        newPos.x = Mathf.Clamp(newPos.x, initialPosition.x - maxMoveDistance, initialPosition.x + maxMoveDistance);
+        cannon.transform.position = newPos;
     }
 
     void MoveCannonRight()
     {
-        Vector3 newPos = transform.position + Vector3.right * cannonSpeed * Time.deltaTime;
-        newPos.x = Mathf.Clamp(newPos.x, initialPosition.x, initialPosition.x + maxMoveDistance);
-        transform.position = newPos;
+        Vector3 newPos = cannon.transform.position + Vector3.right * cannonSpeed * Time.deltaTime;
+        newPos.x = Mathf.Clamp(newPos.x, initialPosition.x - maxMoveDistance, initialPosition.x + maxMoveDistance);
+        cannon.transform.position = newPos;
     }
 
 }
