@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,13 +12,21 @@ public class GameManager : MonoBehaviour
     {
         get { return instance; }
     }
-
-    public GameObject targetPrefab;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI finalText;
+    public Transform endGamePanel;
+    public GameObject targetPrefab;
+
     public delegate void TargetHitDelegate();
     public static event TargetHitDelegate OnTargetHitEvent;
-    
-    private int score; 
+
+    private bool isGameOver = false;
+    private int score;
+    public int Score { 
+        get { return score; }
+        set { score = value; }
+    }
+    private int targetScore = 10;
 
     private void Awake()
     {
@@ -49,11 +58,40 @@ public class GameManager : MonoBehaviour
         scoreText.text = score.ToString();
     }
 
+    void Update()
+    {
+        if (score < -2)
+        {
+            isGameOver = true;
+            Lose();
+        }
+
+        if (score >= targetScore)
+        {
+            isGameOver = true;
+            Win();
+        }
+    }
+
+    private void Lose()
+    {
+        finalText.text = "You Lost!";
+        endGamePanel.gameObject.SetActive(true); 
+    }
+
+    private void Win()
+    {
+        finalText.text = "You Win!";
+        endGamePanel.gameObject.SetActive(true);
+    }
+
     public void SpawnTargets()
     {
-        Vector3 spawnPoint = GetRandomSpawnPoint();
-        GameObject target = Instantiate(targetPrefab, spawnPoint, Quaternion.Euler(35, 0, 0));
-        Destroy(target, 12f); //Destroy the target after 10 seconds;
+        if (!isGameOver)
+        {
+            Vector3 spawnPoint = GetRandomSpawnPoint();
+            Instantiate(targetPrefab, spawnPoint, Quaternion.Euler(35, 0, 0));
+        }
     }
 
     private Vector3 GetRandomSpawnPoint()
@@ -79,11 +117,34 @@ public class GameManager : MonoBehaviour
 
     private void IncreaseScore()
     {
+        if (isGameOver)
+        {
+            return; 
+        }
         score++;
+    }
+
+    public void DecreaseScore()
+    {
+        if (isGameOver)
+        {
+            return; 
+        }
+        score--;
+        UpdateScoreDisplay();
     }
 
     private void OnDisable()
     {
         OnTargetHitEvent -= HandleTargetHit;
+    }
+
+    public void RestartGame()
+    {
+        score = 0;
+        isGameOver = false; 
+        endGamePanel.gameObject.SetActive(false);
+        int sceneIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(sceneIndex);
     }
 }

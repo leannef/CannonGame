@@ -44,13 +44,11 @@ public class CannonController : MonoBehaviour
             FireCannonball();
         }
 
-        // Move the cannon left when 'Q' key is pressed
         if (Input.GetKey(KeyCode.Q))
         {
             MoveCannonLeft();
         }
 
-        // Move the cannon right when 'E' key is released
         if (Input.GetKey(KeyCode.E))
         {
             MoveCannonRight();

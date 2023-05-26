@@ -27,9 +27,8 @@ public class BulletController : MonoBehaviour
         {
             Instantiate(boomPrefab, other.transform.position, Quaternion.identity);
             Destroy(other.gameObject);
-            GameManager.Instance.TargetHit();             
-            Destroy(gameObject);
-            
+            GameManager.Instance.TargetHit();    
+            Destroy(gameObject);           
         }
     }
 
